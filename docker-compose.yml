@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - ./infra/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: foxkdev
+      MONGO_INITDB_ROOT_PASSWORD: securepass
+      MONGO_INITDB_DATABASE: __pass-api
+    networks:
+      - foxkdev
+networks:
+  foxkdev:
+    name: foxkdev
