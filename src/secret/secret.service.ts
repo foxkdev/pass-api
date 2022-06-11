@@ -5,21 +5,18 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreateSecretDto } from './dto/create-secret.dto';
 import { Login } from './domain/login.domain';
 import { instanceDomainByType } from './domain/instance-domain-by-type';
+import { UpdateSecretDto } from './dto/update-secret.dto';
 
 @Injectable()
 export class SecretService {
   constructor(private secretRepository: SecretRepository) {}
 
   async getAll(): Promise<Array<Login | Secret | []>> {
-    const secrets = await this.secretRepository.findAll();
-    // return secrets.map((secret) => {
-    //   return secret.toObject();
-    // });
-    return secrets;
+    return await this.secretRepository.findAll();
   }
 
   async getById(id: string) {
-    const secret = await this.secretRepository.findOne(id);
+    const secret = await this.secretRepository.findById(id);
     if (!secret) {
       throw new NotFoundException(`secret with id ${id} not found`);
     }
@@ -37,6 +34,18 @@ export class SecretService {
     });
 
     await this.secretRepository.create(secret);
+    return secret;
+  }
+
+  async update(id: string, { name, content }: UpdateSecretDto) {
+    const secret = await this.secretRepository.findById(id);
+    if (!secret) {
+      throw new NotFoundException(`secret with id ${id} not found`);
+    }
+    secret.name = name;
+    secret.setContent(content);
+
+    await this.secretRepository.update(secret);
     return secret;
   }
 

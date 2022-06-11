@@ -24,7 +24,8 @@ export class Login extends Secret {
     return new Login(password);
   }
 
-  setContent({ urls, username, password }) {
+  setContent(content) {
+    const { urls, username, password } = content;
     if (!urls) {
       throw new BadRequestException(`field content.urls required`);
     }

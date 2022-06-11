@@ -1,7 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { SecretService } from './secret.service';
 // import { CreateCatDto } from './dto/create-cat.dto';
 import { CreateSecretDto } from './dto/create-secret.dto';
+import { UpdateSecretDto } from './dto/update-secret.dto';
 
 @Controller('secrets')
 export class SecretController {
@@ -20,6 +29,14 @@ export class SecretController {
   @Get(':id')
   async getById(@Param('id') id: string): Promise<any> {
     return this.secretService.getById(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateSecretDto: UpdateSecretDto,
+  ): Promise<any> {
+    return this.secretService.update(id, updateSecretDto);
   }
 
   @Delete(':id')

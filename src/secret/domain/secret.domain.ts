@@ -19,6 +19,10 @@ export class Secret {
     return new Secret(secret);
   }
 
+  setContent(content) {
+    this.content = content;
+  }
+
   public toObject() {
     return {
       id: this.id,
