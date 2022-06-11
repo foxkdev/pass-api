@@ -1,20 +1,21 @@
 import { BadRequestException } from '@nestjs/common';
-import { Secret } from './secret.domain';
+
+import { Crypto } from 'src/libs/crypto';
 
 export const LOGIN_TYPE = 'LOGIN';
 
-export class Login extends Secret {
+export class Login {
   id: string;
   name: string;
   type: string;
-  content: object;
+  content: any;
   createdAt: Date;
   updatedAt: Date;
 
   constructor({ id, name, content, createdAt, updatedAt }) {
-    super({ id, name, type: LOGIN_TYPE, content: {}, createdAt, updatedAt });
     this.id = id;
     this.name = name;
+    this.type = LOGIN_TYPE;
     this.setContent(content);
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -39,6 +40,25 @@ export class Login extends Secret {
       urls,
       username,
       password,
+    };
+  }
+
+  async encryptContent(tokenEncryption) {
+    this.content = await Crypto.encryptObject(this.content, tokenEncryption);
+  }
+
+  async decryptContent(tokenEncryption) {
+    this.content = await Crypto.decryptObject(this.content, tokenEncryption);
+  }
+
+  public toObject() {
+    return {
+      id: this.id,
+      name: this.name,
+      type: this.type,
+      content: this.content,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
   }
 }

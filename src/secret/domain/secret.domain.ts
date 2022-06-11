@@ -1,8 +1,9 @@
+import { Crypto } from 'src/libs/crypto';
 export class Secret {
   id: string;
   name: string;
   type: string;
-  content: object;
+  content: any;
   createdAt: Date;
   updatedAt: Date;
 
@@ -21,6 +22,22 @@ export class Secret {
 
   setContent(content) {
     this.content = content;
+  }
+  async encryptContent(tokenEncryption) {
+    const { value } = this.content;
+    const valueEncrypted = await Crypto.encrypt(value, tokenEncryption);
+    this.content = {
+      value: valueEncrypted,
+    };
+    return this.content;
+  }
+
+  async decryptContent(tokenEncryption) {
+    const { value } = this.content;
+    const valueDecrypted = await Crypto.decrypt(value, tokenEncryption);
+    return {
+      value: valueDecrypted,
+    };
   }
 
   public toObject() {

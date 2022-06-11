@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Post,
   Put,
@@ -17,8 +18,11 @@ export class SecretController {
   constructor(private readonly secretService: SecretService) {}
 
   @Post()
-  async create(@Body() createSecretDto: CreateSecretDto) {
-    return await this.secretService.create(createSecretDto);
+  async create(
+    @Body() createSecretDto: CreateSecretDto,
+    @Headers('token-encryption') tokenEncryption,
+  ) {
+    return await this.secretService.create(createSecretDto, tokenEncryption);
   }
 
   @Get()
@@ -35,12 +39,21 @@ export class SecretController {
   async update(
     @Param('id') id: string,
     @Body() updateSecretDto: UpdateSecretDto,
+    @Headers('token-encryption') tokenEncryption,
   ): Promise<any> {
-    return this.secretService.update(id, updateSecretDto);
+    return this.secretService.update(id, updateSecretDto, tokenEncryption);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.secretService.delete(id);
+  }
+
+  @Get(':id/decrypted')
+  async getDecrypted(
+    @Param('id') id: string,
+    @Headers('token-encryption') tokenEncryption,
+  ) {
+    return await this.secretService.getById(id, tokenEncryption);
   }
 }

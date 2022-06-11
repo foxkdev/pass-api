@@ -23,7 +23,7 @@ export class SecretRepository {
     return secret ? this.toDomain(secret) : null;
   }
 
-  async create(secret: Secret): Promise<Login | Secret> {
+  async create(secret: Login | Secret): Promise<Login | Secret> {
     const newSecret = this.secretModel.create(this.toModel(secret));
     return this.toDomain(newSecret);
   }
@@ -43,7 +43,7 @@ export class SecretRepository {
     return deleted;
   }
 
-  toDomain(secret): Secret {
+  toDomain(secret): Login | Secret {
     return instanceDomainByType(secret.type, {
       id: secret._id,
       type: secret.type,
@@ -54,7 +54,7 @@ export class SecretRepository {
     });
   }
 
-  toModel(secret: Secret) {
+  toModel(secret: Login | Secret) {
     return secret.toObject();
   }
 }

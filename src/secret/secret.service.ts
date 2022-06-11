@@ -15,15 +15,18 @@ export class SecretService {
     return await this.secretRepository.findAll();
   }
 
-  async getById(id: string) {
+  async getById(id: string, tokenEncryption = null) {
     const secret = await this.secretRepository.findById(id);
     if (!secret) {
       throw new NotFoundException(`secret with id ${id} not found`);
     }
+    if (tokenEncryption) {
+      await secret.decryptContent(tokenEncryption);
+    }
     return secret;
   }
 
-  async create({ type, name, content }: CreateSecretDto) {
+  async create({ type, name, content }: CreateSecretDto, tokenEncryption) {
     const secret = instanceDomainByType(type, {
       id: uuidv4(),
       name,
@@ -32,19 +35,23 @@ export class SecretService {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-
+    await secret.encryptContent(tokenEncryption);
     await this.secretRepository.create(secret);
     return secret;
   }
 
-  async update(id: string, { name, content }: UpdateSecretDto) {
+  async update(
+    id: string,
+    { name, content }: UpdateSecretDto,
+    tokenEncryption,
+  ) {
     const secret = await this.secretRepository.findById(id);
     if (!secret) {
       throw new NotFoundException(`secret with id ${id} not found`);
     }
     secret.name = name;
     secret.setContent(content);
-
+    await secret.encryptContent(tokenEncryption);
     await this.secretRepository.update(secret);
     return secret;
   }
