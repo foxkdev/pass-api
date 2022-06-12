@@ -24,20 +24,13 @@ export class Secret {
     this.content = content;
   }
   async encryptContent(tokenEncryption) {
-    const { value } = this.content;
-    const valueEncrypted = await Crypto.encrypt(value, tokenEncryption);
-    this.content = {
-      value: valueEncrypted,
-    };
+    this.content = await Crypto.encryptObject(this.content, tokenEncryption);
     return this.content;
   }
 
   async decryptContent(tokenEncryption) {
-    const { value } = this.content;
-    const valueDecrypted = await Crypto.decrypt(value, tokenEncryption);
-    return {
-      value: valueDecrypted,
-    };
+    this.content = await Crypto.decryptObject(this.content, tokenEncryption);
+    return this.content;
   }
 
   public toObject() {
