@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
-
+import { Helpers } from './helpers';
 export class Crypto {
   static async encrypt(textToEncrypt, password, random = false) {
     const iv = random
@@ -45,7 +45,7 @@ export class Crypto {
     for (const item in content) {
       const value = content[item];
       contentEncrypted[item] = await this.encrypt(
-        typeof value === 'string' ? value : JSON.stringify(value),
+        Helpers.toString(value),
         tokenEncryption,
       );
     }
@@ -55,11 +55,8 @@ export class Crypto {
   static async decryptObject(content, tokenEncryption) {
     const contentDecrypted = content;
     for (const item in content) {
-      let value = await this.decrypt(content[item], tokenEncryption);
-      try {
-        value = JSON.parse(value);
-      } catch {}
-      contentDecrypted[item] = value;
+      const value = await this.decrypt(content[item], tokenEncryption);
+      contentDecrypted[item] = Helpers.toObject(value);
     }
     return contentDecrypted;
   }
