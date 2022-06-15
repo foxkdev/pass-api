@@ -7,11 +7,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { SecretService } from './secret.service';
 // import { CreateCatDto } from './dto/create-cat.dto';
 import { CreateSecretDto } from './dto/create-secret.dto';
 import { UpdateSecretDto } from './dto/update-secret.dto';
+import { FindAllSecretsDto } from './dto/find-all-secrets.dto';
 
 @Controller('secrets')
 export class SecretController {
@@ -26,8 +28,8 @@ export class SecretController {
   }
 
   @Get()
-  async findAll(): Promise<any[]> {
-    return this.secretService.getAll();
+  async findAll(@Query() filters: FindAllSecretsDto): Promise<any[]> {
+    return this.secretService.getAll(filters);
   }
 
   @Get(':id')

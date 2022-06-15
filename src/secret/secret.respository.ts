@@ -13,8 +13,11 @@ export class SecretRepository {
     private secretModel: Model<SecretDocument>,
   ) {}
 
-  async findAll(): Promise<Array<Login | Secret | []>> {
-    const secrets = await this.secretModel.find().exec();
+  async findAll(filters: any = {}): Promise<Array<Login | Secret | []>> {
+    if (filters.name) {
+      filters.name = { $regex: filters.name };
+    }
+    const secrets = await this.secretModel.find(filters).exec();
     return secrets.map((secret) => this.toDomain(secret));
   }
 

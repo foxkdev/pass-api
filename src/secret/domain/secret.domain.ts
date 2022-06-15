@@ -1,4 +1,6 @@
 import { Crypto } from 'src/libs/crypto';
+
+export const SECRET_TYPE = 'SECRET';
 export class Secret {
   id: string;
   name: string;

@@ -1,3 +1,5 @@
+import { isString } from 'class-validator';
+
 export const Helpers = {
   toString: (value) => {
     switch (typeof value) {
@@ -17,7 +19,7 @@ export const Helpers = {
     if (!isNaN(Number(value))) {
       return Number(value);
     }
-    switch (value.toLowercase().trim()) {
+    switch (value.toLowerCase().trim()) {
       case 'true':
         return true;
       case 'false':

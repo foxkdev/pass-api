@@ -11,8 +11,8 @@ import { UpdateSecretDto } from './dto/update-secret.dto';
 export class SecretService {
   constructor(private secretRepository: SecretRepository) {}
 
-  async getAll(): Promise<Array<Login | Secret | []>> {
-    return await this.secretRepository.findAll();
+  async getAll(filters: object): Promise<Array<Login | Secret | []>> {
+    return await this.secretRepository.findAll(filters);
   }
 
   async getById(id: string, tokenEncryption = null) {
