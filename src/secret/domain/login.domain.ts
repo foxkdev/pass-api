@@ -8,14 +8,16 @@ export class Login {
   id: string;
   name: string;
   type: string;
+  flags: any;
   content: any;
   createdAt: Date;
   updatedAt: Date;
 
-  constructor({ id, name, content, createdAt, updatedAt }) {
+  constructor({ id, name, flags, content, createdAt, updatedAt }) {
     this.id = id;
     this.name = name;
     this.type = LOGIN_TYPE;
+    this.flags = flags;
     this.setContent(content);
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -56,6 +58,7 @@ export class Login {
       id: this.id,
       name: this.name,
       type: this.type,
+      flags: this.flags,
       content: this.content,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,

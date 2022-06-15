@@ -13,7 +13,6 @@ import { SecretService } from './secret.service';
 // import { CreateCatDto } from './dto/create-cat.dto';
 import { CreateSecretDto } from './dto/create-secret.dto';
 import { UpdateSecretDto } from './dto/update-secret.dto';
-import { FindAllSecretsDto } from './dto/find-all-secrets.dto';
 
 @Controller('secrets')
 export class SecretController {
@@ -28,8 +27,14 @@ export class SecretController {
   }
 
   @Get()
-  async findAll(@Query() filters: FindAllSecretsDto): Promise<any[]> {
-    return this.secretService.getAll(filters);
+  async findAll(@Query('q') filters = '') {
+    let filtersParsed: any = filters;
+    if (filtersParsed !== '') {
+      filtersParsed = JSON.parse(Buffer.from(filters, 'base64').toString());
+    }
+
+    const items = await this.secretService.getAll(filtersParsed);
+    return items.map((item: any) => item.toObject());
   }
 
   @Get(':id')

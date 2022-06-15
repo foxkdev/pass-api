@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
 import { SecretTypes } from './secret-types';
 export class CreateSecretDto {
   @IsEnum(SecretTypes, { message: 'secret type is invalid' })
@@ -6,6 +6,9 @@ export class CreateSecretDto {
 
   @IsNotEmpty()
   name: string;
+
+  @IsOptional()
+  flags?: object;
 
   @IsNotEmpty()
   content: object;

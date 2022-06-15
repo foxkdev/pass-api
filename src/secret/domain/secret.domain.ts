@@ -5,14 +5,16 @@ export class Secret {
   id: string;
   name: string;
   type: string;
+  flags: any;
   content: any;
   createdAt: Date;
   updatedAt: Date;
 
-  constructor({ id, name, type, content, createdAt, updatedAt }) {
+  constructor({ id, name, type, flags, content, createdAt, updatedAt }) {
     this.id = id;
     this.name = name;
     this.type = type;
+    this.flags = flags;
     this.content = content;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -40,6 +42,7 @@ export class Secret {
       id: this.id,
       name: this.name,
       type: this.type,
+      flags: this.flags,
       content: this.content,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,

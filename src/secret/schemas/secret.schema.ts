@@ -20,6 +20,9 @@ export class Secret {
   type: string;
 
   @Prop({ type: Object })
+  flags: object;
+
+  @Prop({ type: Object })
   content: object;
 
   @Prop()

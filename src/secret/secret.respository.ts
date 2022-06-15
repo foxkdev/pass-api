@@ -14,10 +14,17 @@ export class SecretRepository {
   ) {}
 
   async findAll(filters: any = {}): Promise<Array<Login | Secret | []>> {
+    const filtersMaped = { ...filters };
     if (filters.name) {
       filters.name = { $regex: filters.name };
     }
-    const secrets = await this.secretModel.find(filters).exec();
+    if (filters.flags) {
+      delete filtersMaped.flags;
+    }
+    for (const flag in filters.flags) {
+      filtersMaped[`flags.${flag}`] = filters.flags[flag];
+    }
+    const secrets = await this.secretModel.find(filtersMaped).exec();
     return secrets.map((secret) => this.toDomain(secret));
   }
 
@@ -51,6 +58,7 @@ export class SecretRepository {
       id: secret._id,
       type: secret.type,
       name: secret.name,
+      flags: secret.flags,
       content: secret.content,
       createdAt: secret.createdAt,
       updatedAt: secret.updatedAt,
