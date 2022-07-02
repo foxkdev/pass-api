@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Secret } from './domain/secret.domain';
 import { SecretRepository } from './secret.respository';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,10 +24,14 @@ export class SecretService {
     if (!secret) {
       throw new NotFoundException(`secret with id ${id} not found`);
     }
-    if (tokenEncryption) {
-      await secret.decryptContent(tokenEncryption);
+    try {
+      if (tokenEncryption) {
+        await secret.decryptContent(tokenEncryption);
+      }
+      return secret;
+    } catch (err) {
+      throw new BadRequestException(err.message);
     }
-    return secret;
   }
 
   async create(
@@ -58,6 +66,7 @@ export class SecretService {
     secret.setContent(content);
     await secret.encryptContent(tokenEncryption);
     await this.secretRepository.update(secret);
+    await secret.decryptContent(tokenEncryption);
     return secret;
   }
 

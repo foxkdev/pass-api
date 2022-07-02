@@ -37,7 +37,12 @@ export class Crypto {
       decipher.update(Buffer.from(encryptedText, 'hex')),
       decipher.final(),
     ]);
-    return decryptedText.toString();
+    const decrypted = decryptedText.toString();
+    const regex = /^[A-Za-z0-9:\/?=\[\]\{\}\"\'\, ]+$/;
+    if (!regex.test(decrypted)) {
+      throw Error('decrypt: characters invalids');
+    }
+    return decrypted;
   }
 
   static async encryptObject(content, tokenEncryption) {
