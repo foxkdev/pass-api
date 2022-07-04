@@ -37,6 +37,94 @@ export class SecretController {
     return items.map((item: any) => item.toObject());
   }
 
+  @Get('/types')
+  async getTypes() {
+    return {
+      login: {
+        key: 'LOGIN',
+        global: [
+          {
+            key: 'name',
+            name: 'name',
+            type: 'text',
+            secret: false,
+            encrypted: false,
+            canCopy: false,
+          },
+        ],
+        flags: [
+          {
+            key: 'flags.website',
+            name: 'website',
+            type: 'text',
+            secret: false,
+            encrypted: false,
+            canCopy: false,
+          },
+        ],
+        content: [
+          {
+            key: 'content.urls',
+            name: 'urls',
+            type: 'array',
+            secret: true,
+            encrypted: true,
+            canCopy: false,
+          },
+          {
+            key: 'content.username',
+            name: 'username',
+            type: 'text',
+            secret: true,
+            encrypted: true,
+            canCopy: true,
+          },
+          {
+            key: 'content.password',
+            name: 'password',
+            type: 'text',
+            secret: true,
+            encrypted: true,
+            canCopy: true,
+          },
+        ],
+      },
+      secret: {
+        key: 'SECRET',
+        global: [
+          {
+            key: 'name',
+            name: 'name',
+            type: 'text',
+            secret: false,
+            encrypted: false,
+            canCopy: false,
+          },
+        ],
+        flags: [
+          {
+            key: 'flags.environment',
+            name: 'environment',
+            type: 'text',
+            secret: false,
+            encrypted: false,
+            canCopy: false,
+          },
+        ],
+        content: [
+          {
+            key: 'content.value',
+            name: 'value',
+            type: 'text',
+            secret: true,
+            encrypted: true,
+            canCopy: true,
+          },
+        ],
+      },
+    };
+  }
+
   @Get(':id')
   async getById(@Param('id') id: string): Promise<any> {
     return this.secretService.getById(id);
